@@ -5,7 +5,31 @@ Enhance image sharpness with [Real-ESRGAN](https://github.com/xinntao/Real-ESRGA
 ## Requirements
 
 - GIMP 3.2+
-- **Any GPU** with Vulkan — NVIDIA, AMD, Intel Arc, iGPU, Apple Silicon (MoltenVK)
+- **GPU with Vulkan support** — no CPU fallback available
+- `wget` or `curl` + `unzip` (install-time only)
+
+## Dependencies
+
+| Layer | Dependency | Required | Notes |
+|-------|-----------|:--------:|-------|
+| System | Vulkan driver | Required | NVIDIA / AMD / Intel / MoltenVK (Apple) |
+| System | `wget` or `curl` + `unzip` | Install-time | Download & extract binary |
+| Binary | `realesrgan-ncnn-vulkan` | Required | Standalone C++, ~11 MB (auto-downloaded) |
+| Models | `realesrgan-x4plus.bin` + `.param` | Required | 32 MB, photos (included) |
+| Models | `realesrgan-x4plus-anime` | Optional | 9 MB, anime (included) |
+| Models | `realesr-animevideov3-x4` | Optional | 1 MB, animation (included) |
+| Python | Python 3 (GIMP built-in) | Required | Plugin glue only, not the AI engine |
+
+**Total install size**: ~55 MB.
+
+### GPU / Platform Support
+
+| Platform | GPU | Vulkan Support | Status |
+|----------|-----|:-------------:|:------:|
+| Linux | NVIDIA / AMD / Intel | Vulkan driver | Works |
+| Windows | NVIDIA / AMD / Intel | Vulkan driver | Works |
+| macOS | Apple Silicon / AMD / Intel | MoltenVK | Works |
+| Any | CPU-only | No Vulkan | **Does not work** |
 
 ## Install
 
