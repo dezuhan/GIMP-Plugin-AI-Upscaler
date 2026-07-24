@@ -54,6 +54,22 @@ else
     echo "[✓] Binary already installed"
 fi
 
+# Check Vulkan driver
+echo ""
+if command -v vulkaninfo &> /dev/null; then
+    echo "[✓] Vulkan driver found:"
+    vulkaninfo --summary 2>/dev/null | grep -i "deviceName\|apiVersion\|driverVersion" || true
+elif command -v vulkaninfo64 &> /dev/null; then
+    echo "[✓] Vulkan driver found (vulkaninfo64)"
+else
+    echo "[i] vulkaninfo not installed. Cannot verify Vulkan driver."
+    echo "    If the binary fails, install Vulkan drivers for your GPU:"
+    echo "    NVIDIA: nvidia.com/drivers"
+    echo "    AMD:    amd.com/support (or mesa-vulkan-drivers on Linux)"
+    echo "    Intel:  mesa-vulkan-drivers (Linux) / intel.com (Windows)"
+    echo "    macOS:  MoltenVK is bundled with the binary (no extra install needed)"
+fi
+
 # Install plugin files
 mkdir -p "$PLUGINS_PATH"
 cp "$PLUGIN_DIR/ai-upscaler.py" "$PLUGINS_PATH/"
