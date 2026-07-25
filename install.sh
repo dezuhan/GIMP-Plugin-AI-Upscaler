@@ -22,7 +22,11 @@ case "$(uname -s)" in
         ;;
 esac
 
-PLUGIN_DIR="$(dirname "$(readlink -f "$0")")"
+if readlink -f "$0" &>/dev/null; then
+    PLUGIN_DIR="$(dirname "$(readlink -f "$0")")"
+else
+    PLUGIN_DIR="$(cd "$(dirname "$0")" && pwd)"
+fi
 PLUGINS_PATH="$GIMP_PLUGINS/ai-upscaler"
 BIN_DIR="$PLUGINS_PATH/bin"
 
