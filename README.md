@@ -33,21 +33,76 @@ Enhance image sharpness with [Real-ESRGAN](https://github.com/xinntao/Real-ESRGA
 
 ## Install
 
-### Linux / macOS
+### Automatic (recommended)
 
+**Linux / macOS:**
 ```bash
 chmod +x install.sh && ./install.sh
 ```
 
-### Windows
-
-Install [Git Bash](https://git-scm.com/downloads/win), right-click the plugin folder → **Git Bash Here**, then run:
-
+**Windows:** Install [Git Bash](https://git-scm.com/downloads/win), right-click the plugin folder → **Git Bash Here**, then:
 ```bash
 chmod +x install.sh && ./install.sh
 ```
 
-This downloads the Real-ESRGAN Vulkan binary (~11 MB), copies plugin files, and grants Flatpak permissions.
+---
+
+### Manual Install
+
+#### Linux / macOS
+
+```bash
+# 1. Download the Real-ESRGAN Vulkan binary
+#    Linux (Ubuntu):
+wget https://github.com/xinntao/Real-ESRGAN/releases/download/v0.2.5.0/realesrgan-ncnn-vulkan-20220424-ubuntu.zip
+#    macOS:
+curl -L https://github.com/xinntao/Real-ESRGAN/releases/download/v0.2.5.0/realesrgan-ncnn-vulkan-20220424-macos.zip -o realesrgan.zip
+
+# 2. Extract
+unzip realesrgan-ncnn-vulkan-20220424-ubuntu.zip -d /tmp/realesrgan/
+# or macOS: unzip realesrgan.zip -d /tmp/realesrgan/
+
+# 3. Copy binary and models to plugin folder
+PLUGINS=~/.config/GIMP/3.2/plug-ins
+mkdir -p "$PLUGINS/ai-upscaler/bin/models"
+cp /tmp/realesrgan/realesrgan-ncnn-vulkan "$PLUGINS/ai-upscaler/bin/"
+cp bin/models/*.bin bin/models/*.param "$PLUGINS/ai-upscaler/bin/models/"
+
+# 4. Copy plugin files
+cp ai-upscaler.py run_upscaler.sh "$PLUGINS/ai-upscaler/"
+chmod +x "$PLUGINS/ai-upscaler/ai-upscaler.py"
+chmod +x "$PLUGINS/ai-upscaler/run_upscaler.sh"
+chmod +x "$PLUGINS/ai-upscaler/bin/realesrgan-ncnn-vulkan"
+
+# 5. Flatpak only — grant host access
+flatpak override --user --talk-name=org.freedesktop.Flatpak org.gimp.GIMP
+```
+
+#### Windows
+
+```bash
+# Run all commands in Git Bash
+
+# 1. Download the Real-ESRGAN Vulkan binary
+curl -L https://github.com/xinntao/Real-ESRGAN/releases/download/v0.2.5.0/realesrgan-ncnn-vulkan-20220424-windows.zip -o /tmp/realesrgan.zip
+
+# 2. Extract
+unzip /tmp/realesrgan.zip -d /tmp/realesrgan/
+
+# 3. Set target path (Git Bash format)
+PLUGINS="$APPDATA/GIMP/3.2/plug-ins"
+PLUGINS="$(echo "$PLUGINS" | sed 's|\\\\|/|g' | sed 's|C:|/c|')"
+mkdir -p "$PLUGINS/ai-upscaler/bin/models"
+
+# 4. Copy binary and models
+cp /tmp/realesrgan/realesrgan-ncnn-vulkan.exe "$PLUGINS/ai-upscaler/bin/"
+cp bin/models/*.bin bin/models/*.param "$PLUGINS/ai-upscaler/bin/models/"
+
+# 5. Copy plugin files
+cp ai-upscaler.py run_upscaler.sh "$PLUGINS/ai-upscaler/"
+
+# 6. Restart GIMP → Filters → Enhance → AI Upscaler
+```
 
 ## Usage
 
